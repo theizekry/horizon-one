@@ -2,5 +2,6 @@
     "Core": true,
     "Dashboard": true,
     "Integration": true,
-    "Report": true
+    "Report": true,
+    "HorizonPulse": true
 }

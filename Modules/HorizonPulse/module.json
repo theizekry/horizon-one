@@ -1,0 +1,11 @@
+{
+    "name": "HorizonPulse",
+    "alias": "horizonpulse",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\HorizonPulse\\Providers\\HorizonPulseServiceProvider"
+    ],
+    "files": []
+}
