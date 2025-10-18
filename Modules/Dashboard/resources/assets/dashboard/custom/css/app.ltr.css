@@ -1,0 +1,13 @@
+/* Un-read count for the Side bar Items */
+
+.unread-count {
+    background-color: red;
+    color: white;
+    border-radius: 74%;
+    padding: 0 6px;
+    font-size: 12px;
+    position: absolute;
+    right: 40px;
+}
+
+/* Un-read count for the Side bar Items */

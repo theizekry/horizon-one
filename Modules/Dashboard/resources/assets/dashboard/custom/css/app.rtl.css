@@ -1,0 +1,45 @@
+/* Start General Section */
+
+* {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* End General Section */
+
+
+/* Start Section tinymce [ Textarea Editor ] */
+
+.tox-tinymce {
+    border: 1px solid #d6daec !important;
+    font-family:'Cairo', sans-serif !important;
+}
+
+/* End Section tinymce [ Textarea Editor ] */
+
+/* Un-read count for the Side bar Items */
+
+.unread-count {
+    background-color: red;
+    color: white;
+    border-radius: 74%;
+    padding: 0 6px;
+    font-size: 12px;
+    position: absolute;
+    right: 174px;
+}
+
+/* Un-read count for the Side bar Items */
+
+/* Select 2 */
+
+.select2-container--open .select2-dropdown {
+    position: relative;
+    color: #000;
+}
+
+/* Custom CSS for Select2 */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    font-weight: bold; /* Set the font-weight to bold */
+    color: #333;       /* Set the desired color */
+}
+/* Select 2 */
