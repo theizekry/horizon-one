@@ -15,19 +15,19 @@
             <div class="menu-content d-flex align-items-center px-3">
                 <!--begin::Avatar-->
                 <div class="symbol symbol-50px me-5">
-                    <img alt="Logo" src="{{ $admin->image ?? '' }}" />
+                    <img alt="Logo" src="{{ $admin?->image ?? '' }}" />
                 </div>
                 <!--end::Avatar-->
                 <!--begin::Username-->
                 <div class="d-flex flex-column">
                     <div class="fw-bolder d-flex align-items-center fs-5">
-                        {{ $admin->name }}
+                        {{ $admin?->name ?? 'Guest User' }}
                         <span class="badge fw-bolder fs-8 px-2 py-1 ms-2 badge-light-success">
                             Online
                         </span>
                     </div>
                     <a href="#" class="fw-bold text-muted text-hover-primary fs-7">
-                        {{ $admin->email }}
+                        {{ $admin?->email ?? 'guest@example.com' }}
                     </a>
                 </div>
                 <!--end::Username-->

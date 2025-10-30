@@ -145,6 +145,64 @@
 
         {{-- End section Manage Application --}}
 
+        {{-- Start section Horizon Pulse --}}
+        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('horizon-pulse*') || request()->is('dashboard/projects*') ? 'active' : ''}}">
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+         <span class="menu-link">
+         <span class="menu-bullet">
+             <span class="menu-icon">
+                <span class="svg-icon svg-icon-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path opacity="0.3" d="M3 13H11C11.6 13 12 12.6 12 12V4C12 3.4 11.6 3 11 3H3C2.4 3 2 3.4 2 4V12C2 12.6 2.4 13 3 13Z" fill="black"></path>
+                        <path d="M14 4H22C22.6 4 23 4.4 23 5V13C23 13.6 22.6 14 22 14H14C13.4 14 13 13.6 13 13V5C13 4.4 13.4 4 14 4Z" fill="black"></path>
+                        <path opacity="0.3" d="M3 21H11C11.6 21 12 20.6 12 20V16C12 15.4 11.6 15 11 15H3C2.4 15 2 15.4 2 16V20C2 20.6 2.4 21 3 21Z" fill="black"></path>
+                        <path d="M14 16H22C22.6 16 23 16.4 23 17V21C23 21.6 22.6 22 22 22H14C13.4 22 13 21.6 13 21V17C13 16.4 13.4 16 14 16Z" fill="black"></path>
+                    </svg>
+                </span>
+             </span>
+         </span>
+         <span class="menu-title">
+             Horizon Pulse
+         </span>
+         <span class="menu-arrow"></span>
+         </span>
+                <div class="menu-sub menu-sub-accordion menu-active-bg"
+                     style="display: {{ request()->is('horizon-pulse*') || request()->is('dashboard/projects*') ? 'block' : 'none'}}; overflow: hidden;">
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->is('horizon-pulse') ? 'active' : ''}}"
+                           href="{{ route('horizon-pulse.index') }}">
+                           <span class="menu-bullet">
+                           <span class="bullet bullet-dot"></span>
+                           </span>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->is('dashboard/projects') && !request()->is('dashboard/projects/*') ? 'active' : ''}}"
+                           href="{{ route('dashboard.projects.index') }}">
+                           <span class="menu-bullet">
+                           <span class="bullet bullet-dot"></span>
+                           </span>
+                            <span class="menu-title">Manage Projects</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->is('dashboard/projects/create') ? 'active' : ''}}"
+                           href="{{ route('dashboard.projects.create') }}">
+                           <span class="menu-bullet">
+                           <span class="bullet bullet-dot"></span>
+                           </span>
+                            <span class="menu-title">Add New Project</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {{-- End section Horizon Pulse --}}
+
         {{-- Start section Manage Account --}}
         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
             <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
@@ -171,7 +229,7 @@
                      style="display: {{ request()->is('dashboard/edit-account') || request()->is('dashboard/change-password') ? 'block' : 'none'}}; overflow: hidden;"
                 >
                     <div class="menu-item">
-                        <a class="menu-link {{ request()->is('dashboard/edit-account') ? 'active' : ''}}" href="{{ route('dashboard.admins.edit', [auth('admin')->id()]) }}">
+                        <a class="menu-link {{ request()->is('dashboard/edit-account') ? 'active' : ''}}" href="{{ auth('admin')->check() ? route('dashboard.admins.edit', [auth('admin')->id()]) : '#' }}">
                         <span class="menu-bullet">
                             <span class="bullet bullet-dot"></span>
                         </span>

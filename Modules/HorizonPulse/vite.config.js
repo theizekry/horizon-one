@@ -4,6 +4,9 @@ import { readdirSync, statSync } from 'fs';
 import { join,relative,dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export default defineConfig({
     build: {
         outDir: '../../public/build-horizonpulse',
@@ -51,7 +54,7 @@ export default defineConfig({
 //export const paths = getFilePaths(assetsDir);
 
 
-//export const paths = [
-//    'Modules/HorizonPulse/resources/assets/sass/app.scss',
-//    'Modules/HorizonPulse/resources/assets/js/app.js',
-//];
+export const paths = [
+    'Modules/HorizonPulse/resources/assets/sass/app.scss',
+    'Modules/HorizonPulse/resources/assets/js/app.js',
+];

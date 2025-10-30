@@ -1,0 +1,42 @@
+// Horizon Pulse Dashboard Styles
+.horizon-pulse-dashboard {
+    .card {
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    }
+    
+    .status-badge {
+        &.active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        &.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        &.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    }
+    
+    .connection-status {
+        &.connected {
+            color: #28a745;
+        }
+        
+        &.connecting {
+            color: #17a2b8;
+        }
+        
+        &.failed {
+            color: #dc3545;
+        }
+    }
+}

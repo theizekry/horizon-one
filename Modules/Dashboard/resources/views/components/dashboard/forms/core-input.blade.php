@@ -50,7 +50,7 @@
                 value="{{ $type !== 'password' ? $boundValue : '' }}"
                 @if($disabled) disabled @endif
                 @if($required) required @endif
-                {{ $attributes->except(['class', 'type']) }}
+                {!! $attributes->except(['class', 'type']) !!}
         >
 
         @if($hasError)

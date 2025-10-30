@@ -15,7 +15,11 @@ async function getConfig() {
             const allPaths = await collectModuleAssetsPaths(paths, 'Modules');
             return {
                 server: {
-                    host: '0.0.0.0'
+                    host: '0.0.0.0',
+                    hmr: {
+                        host: 'app.horizon.one.node'
+                    },
+                    allowedHosts: ['app.horizon.one.node', 'localhost', '127.0.0.1']
                 },
                 plugins: [
                     laravel({

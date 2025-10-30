@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Dashboard\Http\Controllers\DashboardController;
+use Modules\Dashboard\Http\Controllers\ProjectController;
 use Modules\Dashboard\Http\Controllers\Admin\AdminController;
 use Modules\Dashboard\Http\Controllers\DashboardAuth\LoginController;
 use Modules\Dashboard\Http\Controllers\DashboardAuth\LogoutController;
@@ -37,8 +38,24 @@ Route::prefix('/dashboard')->group(function () {
         // Manage Admins
         Route::resource('admins', AdminController::class);
 
+        // Projects
+        Route::resource('projects', ProjectController::class);
+        Route::get('projects/{project}/metrics', [ProjectController::class, 'getMetrics'])->name('projects.metrics');
+        Route::get('projects-metrics', [ProjectController::class, 'getAllMetrics'])->name('projects.all-metrics');
+        Route::post('projects/{project}/test-connection', [ProjectController::class, 'testConnection'])->name('projects.test-connection');
+
         // Change Password
         Route::get('change-password', [ChangePasswordController::class, 'index'])->name('change-password.index');
         Route::patch('change-password', [ChangePasswordController::class, 'changePassword'])->name('change-password.update');
     });
 });
+
+// Temporary test routes (no auth required)
+Route::get('dashboard/projects-live-metrics', function() {
+    return view('dashboard::dashboard.projects.simple-live-metrics');
+})->name('dashboard.projects.live-metrics');
+
+Route::get('dashboard/test-metrics', function() {
+    $fetcher = new \Modules\HorizonPulse\Services\HorizonMetricsFetcher();
+    return response()->json($fetcher->fetchAllProjectsMetrics());
+})->name('dashboard.test.metrics');

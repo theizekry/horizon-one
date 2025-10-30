@@ -70,11 +70,11 @@ services:
             - ./docker/data/redis:/data
         command: [ "redis-server", "--save", "60", "1", "--loglevel", "warning" ]
     redis-insight:
-        image: redislabs/redisinsight:latest
+        image: redis/redisinsight:latest
         container_name: app.horizon.one.redis_insight
         ports:
             - "5540:5540"
         volumes:
-            - redis-insight-data:/data
+            - ./docker/data/insight-data:/data
         depends_on:
             - app.redis

@@ -15,18 +15,31 @@ class RedisConnectionFactory
      */
     public static function make(array $config)
     {
-        // Unique name for this connection
-        $connectionName = $config['name'] ?? 'dynamic_' . md5(json_encode($config));
-
-        // Register config temporarily
+        // Use the default connection and modify its config temporarily
+        $connectionName = 'default';
+        
+        // Store original config
+        $originalConfig = config("database.redis.$connectionName");
+        
+        // Set new config
         config(["database.redis.$connectionName" => [
+            'url'      => null,
             'host'     => $config['host'],
+            'username' => null,
             'password' => $config['password'] ?? null,
             'port'     => $config['port'],
             'database' => $config['database'],
+            'options'  => [
+                'prefix' => 'laravel_database_',
+            ],
         ]]);
 
-        // Return ready Redis connection
-        return Redis::connection($connectionName);
+        // Get the connection
+        $connection = Redis::connection($connectionName);
+        
+        // Restore original config
+        config(["database.redis.$connectionName" => $originalConfig]);
+        
+        return $connection;
     }
 }

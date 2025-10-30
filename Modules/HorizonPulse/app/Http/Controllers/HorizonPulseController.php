@@ -2,13 +2,23 @@
 
 namespace Modules\HorizonPulse\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Modules\Dashboard\Models\Project;
+use Modules\Core\Http\Controllers\CoreController;
+use Modules\HorizonPulse\Services\HorizonMetricsService;
 
-class HorizonPulseController extends Controller
+class HorizonPulseController extends CoreController
 {
+    protected HorizonMetricsService $metricsService;
+
+    public function __construct(HorizonMetricsService $metricsService)
+    {
+        $this->metricsService = $metricsService;
+    }
+
     /**
-     * Display a listing of the resource.
+     * Display the Horizon Pulse dashboard
      */
     public function index()
     {
@@ -16,49 +26,121 @@ class HorizonPulseController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Get metrics for all projects
      */
-    public static function make(array $attributes)
+    public function getAllMetrics(): JsonResponse
     {
-        dd($attributes);
+        try {
+            $metrics = $this->metricsService->fetchAllProjectsMetrics();
+
+            return response()->json($metrics);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => 'Failed to fetch metrics',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Get metrics for a specific project
      */
-    public function create()
+    public function getProjectMetrics(Project $project): JsonResponse
     {
-        return view('horizonpulse::create');
+        try {
+            $metrics = $this->metricsService->fetchProjectMetrics($project);
+
+            return response()->json($metrics);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => 'Failed to fetch project metrics',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Test Redis connection for a project
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function testConnection(Request $request, Project $project): JsonResponse
     {
-        return view('horizonpulse::show');
+        try {
+            $result = $this->metricsService->testConnection($project);
+
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Connection test failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Get project overview statistics
      */
-    public function edit($id)
+    public function getOverview(): JsonResponse
     {
-        return view('horizonpulse::edit');
+        try {
+            $projects = Project::all();
+            $metrics  = $this->metricsService->fetchAllProjectsMetrics();
+
+            $overview = [
+                'total_projects'       => $projects->count(),
+                'active_projects'      => collect($metrics)->where('status', 'active')->count(),
+                'warning_projects'     => collect($metrics)->where('status', 'warning')->count(),
+                'error_projects'       => collect($metrics)->where('status', 'error')->count(),
+                'total_failed_jobs'    => collect($metrics)->sum('failed_jobs.count'),
+                'average_throughput'   => $this->calculateAverageThroughput($metrics),
+                'average_memory_usage' => $this->calculateAverageMemoryUsage($metrics),
+            ];
+
+            return response()->json($overview);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => 'Failed to fetch overview',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Calculate average throughput across all projects
      */
-    public function update(Request $request, $id) {}
+    protected function calculateAverageThroughput(array $metrics): string
+    {
+        $total = 0;
+        $count = 0;
+
+        foreach ($metrics as $metric) {
+            if (isset($metric['measures']['throughput'])) {
+                $throughput = $metric['measures']['throughput'];
+                $value      = (int) explode('/', $throughput)[0];
+                $total += $value;
+                $count++;
+            }
+        }
+
+        return $count > 0 ? round($total / $count) . '/min' : '0/min';
+    }
 
     /**
-     * Remove the specified resource from storage.
+     * Calculate average memory usage across all projects
      */
-    public function destroy($id) {}
+    protected function calculateAverageMemoryUsage(array $metrics): string
+    {
+        $total = 0;
+        $count = 0;
+
+        foreach ($metrics as $metric) {
+            if (isset($metric['measures']['memory_usage'])) {
+                $memory = $metric['measures']['memory_usage'];
+                $value  = (int) str_replace('MB', '', $memory);
+                $total += $value;
+                $count++;
+            }
+        }
+
+        return $count > 0 ? round($total / $count) . 'MB' : '0MB';
+    }
 }
